@@ -1,4 +1,4 @@
-import EventEmitter from './EventEmitter';
+import Emitter from './Emitter';
 
 class Stub {
   foo = 'bar';
@@ -9,7 +9,7 @@ type EventArg = { foo: string };
 test('add the listeners and emit', () => {
   const stub = new Stub();
   const eventArg: EventArg = { foo: 'hello' };
-  const event = new EventEmitter<Stub, EventArg>();
+  const event = new Emitter<Stub, EventArg>();
   const handler = jest.fn();
   const handler2 = jest.fn();
 
@@ -28,7 +28,7 @@ test('add the listeners and emit', () => {
 test('remove listeners', () => {
   const stub = new Stub();
   const eventArg: EventArg = { foo: 'hello' };
-  const event = new EventEmitter<Stub, EventArg>();
+  const event = new Emitter<Stub, EventArg>();
   const handler = jest.fn();
   const handler2 = jest.fn();
 
@@ -49,7 +49,7 @@ test('remove listeners', () => {
 test('clear listeners', () => {
   const stub = new Stub();
   const eventArg: EventArg = { foo: 'hello' };
-  const event = new EventEmitter<Stub, EventArg>();
+  const event = new Emitter<Stub, EventArg>();
   const handler = jest.fn();
   const handler2 = jest.fn();
 

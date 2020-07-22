@@ -1,4 +1,4 @@
-import EventEmitter, { Handler } from './EventEmitter';
+import Emitter, { Handler } from './Emitter';
 
-export default EventEmitter;
+export default Emitter;
 export type { Handler };

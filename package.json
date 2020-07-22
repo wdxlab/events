@@ -1,6 +1,6 @@
 {
   "name": "@wdxlab/events",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Rightly typed event emitter",
   "main": "dist/es6/main.js",
   "module": "dist/esm/main.js",

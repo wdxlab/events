@@ -1,6 +1,6 @@
 export type Handler<TSender, TArg> = (sender: TSender, arg: TArg) => void;
 
-export default class EventEmitter<TSender, TArg> {
+export default class Emitter<TSender, TArg> {
   private subscribers: Handler<TSender, TArg>[];
 
   constructor() {

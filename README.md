@@ -13,36 +13,36 @@ npm install @wdxlab/events --save
 ## Usage
 
 ```ts
-import EventEmitter from '@wdxlab/events';
+import Emitter from '@wdxlab/events';
 
-const event = new EventEmitter<Sender, Arg>();
+const emitter = new Emitter<Sender, Arg>();
 
-event.on((sender, arg) => {
+emitter.on((sender, arg) => {
     console.log(sender); // sender
     console.log(arg); // arg
 });
 
-event.emit('sender', 'arg');
+emitter.emit('sender', 'arg');
 ```
 
 ### More realistic use-case
 
 ```ts
-import EventEmitter from '@wdxlab/events';
+import Emitter from '@wdxlab/events';
 
-type EventStartArg = { foo: string };
+type StartArg = { foo: string };
 
 class Foo {
-    eventStart = new EventEmitter<Foo, EventStartArg>()
+    emitterStart = new Emitter<Foo, StartArg>()
 
     start(foo: string) {
-        this.eventStart.emit(this, {foo});
+        this.emitterStart.emit(this, {foo});
     }
 }
 
 const foo = new Foo()
 
-foo.eventStart.on((sender, arg) => {
+foo.emitterStart.on((sender, arg) => {
     console.log(sender); // foo instance
     console.log(arg); // { foo: 'bar' }
 });

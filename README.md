@@ -2,6 +2,8 @@
 
 Rightly typed event emitter for TS/JS
 
+[![npm version](https://badge.fury.io/js/%40wdxlab%2Fevents.svg)](https://badge.fury.io/js/%40wdxlab%2Fevents)
+
 ## Installation
 
 ```sh

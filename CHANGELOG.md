@@ -1,6 +1,10 @@
+## 1.0.4 (22 Jule 2020)
+
+- fix: build for nodejs
+
 ## 1.0.3 (22 Jule 2020)
 
-- fix: fix package.json `types` field
+- fix: package.json `types` field
 
 ## 1.0.2 (22 Jule 2020)
 

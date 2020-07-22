@@ -10,6 +10,7 @@ function generate(options) {
       path: path.resolve(options.output.path),
       library: 'WDXLab-Events',
       libraryTarget: 'umd',
+      globalObject: 'this',
     },
     resolve: {
       extensions: ['.js', '.ts', '.json'],

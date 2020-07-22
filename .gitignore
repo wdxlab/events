@@ -1,0 +1,12 @@
+.idea/
+.vscode/
+node_modules/
+dist/
+dist-test/
+*.log
+*.lock
+.DS_store
+.eslintcache
+*.tsbuildinfo
+*.js.map
+*.ts.map

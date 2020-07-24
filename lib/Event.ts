@@ -1,28 +1,18 @@
 export type Handler<TSender, TArg> = (sender: TSender, arg: TArg) => void;
 
 export default class Event<TSender, TArg> {
-  private subscribers: Handler<TSender, TArg>[];
-
-  constructor() {
-    this.subscribers = [];
-  }
+  private subscribers: Set<Handler<TSender, TArg>> = new Set();
 
   get subscriptionsCount(): number {
-    return this.subscribers.length;
+    return this.subscribers.size;
   }
 
   on(handler: Handler<TSender, TArg>): void {
-    if (!this.subscribers.includes(handler)) {
-      this.subscribers.push(handler);
-    }
+    this.subscribers.add(handler);
   }
 
   off(handler: Handler<TSender, TArg>): void {
-    const ix = this.subscribers.indexOf(handler);
-
-    if (ix > -1) {
-      this.subscribers.splice(ix, 1);
-    }
+    this.subscribers.delete(handler);
   }
 
   emit(sender: TSender, arg: TArg): void {
@@ -32,6 +22,6 @@ export default class Event<TSender, TArg> {
   }
 
   clear(): void {
-    this.subscribers.length = 0;
+    this.subscribers.clear();
   }
 }

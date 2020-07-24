@@ -1,3 +1,13 @@
+## 1.1.0 (24 Jule 2020)
+
+### Feature
+
+- add `ReadonlyEvent`
+
+### Fix
+
+- fix case with removing a listener till emitting
+
 ## 1.0.4 (22 Jule 2020)
 
 - fix: build for nodejs

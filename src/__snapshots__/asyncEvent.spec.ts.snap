@@ -1,0 +1,167 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`filterable 1`] = `
+[
+  [
+    {
+      "name": "ccc",
+    },
+    null,
+  ],
+]
+`;
+
+exports[`filterable 2`] = `[]`;
+
+exports[`filterable 3`] = `
+[
+  [
+    {
+      "name": "ccc",
+    },
+    null,
+  ],
+  [
+    {
+      "name": "ddd",
+    },
+    null,
+  ],
+]
+`;
+
+exports[`filterable 4`] = `[]`;
+
+exports[`filterable 5`] = `
+[
+  [
+    {
+      "name": "ccc",
+    },
+    null,
+  ],
+  [
+    {
+      "name": "ddd",
+    },
+    null,
+  ],
+  [
+    {
+      "name": "foo",
+    },
+    null,
+  ],
+]
+`;
+
+exports[`filterable 6`] = `
+[
+  [
+    {
+      "name": "foo",
+    },
+    null,
+  ],
+]
+`;
+
+exports[`should work 1`] = `
+[
+  [
+    {
+      "name": "foo",
+    },
+    null,
+  ],
+]
+`;
+
+exports[`should work 2`] = `
+[
+  {
+    "type": "return",
+    "value": Promise {},
+  },
+]
+`;
+
+exports[`should work 3`] = `
+[
+  [
+    {
+      "name": "foo",
+    },
+    null,
+  ],
+]
+`;
+
+exports[`should work 4`] = `
+[
+  {
+    "type": "return",
+    "value": Promise {},
+  },
+]
+`;
+
+exports[`should work 5`] = `
+[
+  [
+    {
+      "name": "foo",
+    },
+    null,
+  ],
+  [
+    {
+      "name": "bar",
+    },
+    null,
+  ],
+]
+`;
+
+exports[`should work 6`] = `
+[
+  {
+    "type": "return",
+    "value": Promise {},
+  },
+  {
+    "type": "return",
+    "value": Promise {},
+  },
+]
+`;
+
+exports[`should work 7`] = `
+[
+  [
+    {
+      "name": "foo",
+    },
+    null,
+  ],
+  [
+    {
+      "name": "bar",
+    },
+    null,
+  ],
+]
+`;
+
+exports[`should work 8`] = `
+[
+  {
+    "type": "return",
+    "value": Promise {},
+  },
+  {
+    "type": "return",
+    "value": Promise {},
+  },
+]
+`;

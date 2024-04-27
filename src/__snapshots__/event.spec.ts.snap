@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`filterable 1`] = `
+[
+  [
+    {
+      "name": "ccc",
+    },
+    null,
+  ],
+  [
+    {
+      "name": "ddd",
+    },
+    null,
+  ],
+  [
+    {
+      "name": "foo",
+    },
+    null,
+  ],
+]
+`;
+
+exports[`filterable 2`] = `
+[
+  [
+    {
+      "name": "foo",
+    },
+    null,
+  ],
+]
+`;

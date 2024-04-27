@@ -1,3 +1,23 @@
+## next
+
+Total refactoring
+
+### Breaking
+
+- remove `ReadonlyEvent`
+- swap Sender and Arg argument position
+- no throw exception on emit
+
+### Features
+
+- Event `for(filter)`-method
+- Event options:
+  - source - source for an event (readonly event alternative)
+  - bail - event reaction on any listener error
+  - filter - event only emit if an argument passes a filter
+
+> see [README.md](README.md) for examples
+
 ## 1.1.0 (24 Jule 2020)
 
 ### Feature

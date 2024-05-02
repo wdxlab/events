@@ -1,31 +1,31 @@
-export type Handler<TArg, TSender, TReturn> = (arg: TArg, sender: TSender) => TReturn;
+export type Handler<TArg, TReturn> = (arg: TArg) => TReturn;
 
-export interface Emitable<TArg, TSender, TReturn> {
-  emit(arg: TArg, sender: TSender): TReturn;
+export interface Emitable<TArg, TReturn> {
+  emit(arg: TArg): TReturn;
 }
 
-export type Filter<TArg, TSender> = (arg: TArg, sender: TSender) => boolean;
+export type Filter<TArg> = (arg: TArg) => boolean;
 
-export interface Filterable<TArg, TSender, TReturn> {
-  for(filter: Filter<TArg, TSender>): BaseEvent<TArg, TSender, TReturn>;
+export interface Filterable<TArg, TReturn> {
+  for(filter: Filter<TArg>): BaseEvent<TArg, TReturn>;
 }
 
-export type EventOptions<TArg, TSender, TEmitReturn> = {
-  source?: BaseEvent<TArg, TSender, TEmitReturn>;
+export type EventOptions<TArg, TEmitReturn> = {
+  source?: BaseEvent<TArg, TEmitReturn>;
   bail?: boolean;
-  filter?: Filter<TArg, TSender>;
+  filter?: Filter<TArg>;
 };
 
-export abstract class BaseEvent<TArg, TSender, TEmitReturn>
-  implements Emitable<TArg, TSender, TEmitReturn>, Filterable<TArg, TSender, TEmitReturn>
+export abstract class BaseEvent<TArg, TEmitReturn>
+  implements Emitable<TArg, TEmitReturn>, Filterable<TArg, TEmitReturn>
 {
-  protected subscribers = new Set<Handler<TArg, TSender, unknown>>();
-  readonly sourceEvent?: BaseEvent<TArg, TSender, TEmitReturn>;
-  readonly filter?: Filter<TArg, TSender>;
+  protected subscribers = new Set<Handler<TArg, unknown>>();
+  readonly sourceEvent?: BaseEvent<TArg, TEmitReturn>;
+  readonly filter?: Filter<TArg>;
   readonly isReadOnly: boolean = false;
   readonly isBailMode: boolean = false;
 
-  protected constructor(options?: EventOptions<TArg, TSender, TEmitReturn>) {
+  protected constructor(options?: EventOptions<TArg, TEmitReturn>) {
     this.isBailMode = !!options?.bail;
     this.isReadOnly = !!options?.source;
     this.sourceEvent = options?.source;
@@ -36,13 +36,13 @@ export abstract class BaseEvent<TArg, TSender, TEmitReturn>
     return this.subscribers.size > 0;
   }
 
-  on(handler: Handler<TArg, TSender, unknown>): void {
+  on(handler: Handler<TArg, unknown>): void {
     this.subscribers.add(handler);
   }
 
-  once(handler: Handler<TArg, TSender, unknown>): Handler<TArg, TSender, unknown> {
-    const wrapper: Handler<TArg, TSender, void> = (arg, sender) => {
-      handler(arg, sender);
+  once(handler: Handler<TArg, unknown>): Handler<TArg, unknown> {
+    const wrapper: Handler<TArg, void> = (arg) => {
+      handler(arg);
       this.off(wrapper);
     };
 
@@ -50,12 +50,12 @@ export abstract class BaseEvent<TArg, TSender, TEmitReturn>
     return wrapper;
   }
 
-  off(handler: Handler<TArg, TSender, unknown>): void {
+  off(handler: Handler<TArg, unknown>): void {
     this.subscribers.delete(handler);
   }
 
-  abstract emit(arg: TArg, sender: TSender): TEmitReturn;
-  abstract for(filter: Filter<TArg, TSender>): BaseEvent<TArg, TSender, TEmitReturn>;
+  abstract emit(arg: TArg): TEmitReturn;
+  abstract for(filter: Filter<TArg>): BaseEvent<TArg, TEmitReturn>;
 
   clear(): void {
     this.subscribers.clear();

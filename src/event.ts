@@ -1,28 +1,28 @@
 import { BaseEvent, EventOptions, Filter } from './baseEvent';
 import { AggregateError } from './aggregateError';
 
-export class Event<TArg, TSender = void> extends BaseEvent<TArg, TSender, unknown[]> {
-  constructor(options?: EventOptions<TArg, TSender, unknown[]>) {
+export class Event<TArg> extends BaseEvent<TArg, unknown[]> {
+  constructor(options?: EventOptions<TArg, unknown[]>) {
     super(options);
 
-    this.sourceEvent?.on((arg, sender) => {
-      const result = this.emitInt(arg, sender);
+    this.sourceEvent?.on((arg) => {
+      const result = this.emitInt(arg);
       if (result.length) {
         throw new AggregateError(result);
       }
     });
   }
 
-  emit(arg: TArg, sender: TSender): unknown[] {
+  emit(arg: TArg): unknown[] {
     if (this.isReadOnly) {
       throw new Error('Event is readonly');
     }
 
-    return this.emitInt(arg, sender);
+    return this.emitInt(arg);
   }
 
-  protected emitInt(arg: TArg, sender: TSender): unknown[] {
-    if (this.filter && !this.filter(arg, sender)) {
+  protected emitInt(arg: TArg): unknown[] {
+    if (this.filter && !this.filter(arg)) {
       return [];
     }
 
@@ -30,7 +30,7 @@ export class Event<TArg, TSender = void> extends BaseEvent<TArg, TSender, unknow
 
     for (const fn of this.subscribers) {
       try {
-        fn.call(sender, arg, sender);
+        fn(arg);
       } catch (e) {
         errors.push(e);
         if (this.isBailMode) {
@@ -42,7 +42,7 @@ export class Event<TArg, TSender = void> extends BaseEvent<TArg, TSender, unknow
     return errors;
   }
 
-  for(filter: Filter<TArg, TSender>): Event<TArg, TSender> {
-    return new Event<TArg, TSender>({ source: this, filter, bail: this.isBailMode });
+  for(filter: Filter<TArg>): Event<TArg> {
+    return new Event<TArg>({ source: this, filter, bail: this.isBailMode });
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@wdxlab/events",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.2",
   "description": "Rightly typed event emitter",
   "main": "dist/cjs",
   "module": "dist/esm",

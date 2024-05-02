@@ -17,15 +17,12 @@ import Event from '@wdxlab/events';
 
 const event = new Event<string, { foo: string }>();
 
-event.on((arg, sender) => {
+event.on((arg) => {
   console.log(arg); // hello
-  console.log(sender); // sender ({ foo: 'bar' })
 });
 
 event.emit('hello', { foo: string });
 ```
-
-Sender is optional and might be used as a reference to an object that emits an event.
 
 ### Events API
 
@@ -37,9 +34,9 @@ Add event listener
 
 Remove specific event listener
 
-#### `emit(arg, sender): unknown[]`
+#### `emit(arg): unknown[]`
 
-Emit event with some argument and sender reference
+Emit event with some argument
 
 Return a list with subscribers errors
 
@@ -83,15 +80,13 @@ await event.emit(123);
 console.log('after emit'); // 3
 ```
 
-> also, sender is optional
-
 ### Async Events API
 
 The same as for Events expect the `emit` method
 
-#### emit(arg, sender): Promise<unknown[]>
+#### emit(arg): Promise<unknown[]>
 
-Emit event with some argument and sender reference
+Emit event with some argument
 
 Return a promise that resolves with a list of subscribers errors
 

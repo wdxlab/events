@@ -5,7 +5,7 @@ Total refactoring
 ### Breaking
 
 - remove `ReadonlyEvent`
-- swap Sender and Arg argument position
+- remove sender
 - no throw exception on emit
 
 ### Features

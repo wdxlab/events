@@ -1,15 +1,10 @@
 import { Event } from './event';
 
-class Stub {
-  foo = 'bar';
-}
-
 type EventArg = { foo: string };
 
 test('add the listeners and emit', () => {
-  const stub = new Stub();
   const eventArg: EventArg = { foo: 'hello' };
-  const event = new Event<EventArg, Stub>();
+  const event = new Event<EventArg>();
   const handler = jest.fn();
   const handler2 = jest.fn();
 
@@ -17,18 +12,17 @@ test('add the listeners and emit', () => {
   event.on(handler);
   event.on(handler2);
   expect(event.hasSubscriptions()).toBe(true);
-  event.emit(eventArg, stub);
+  event.emit(eventArg);
 
   expect(handler).toBeCalledTimes(1);
-  expect(handler).toBeCalledWith(eventArg, stub);
+  expect(handler).toBeCalledWith(eventArg);
   expect(handler2).toBeCalledTimes(1);
-  expect(handler2).toBeCalledWith(eventArg, stub);
+  expect(handler2).toBeCalledWith(eventArg);
 });
 
 test('add listener once', () => {
-  const stub = new Stub();
   const eventArg: EventArg = { foo: 'hello' };
-  const event = new Event<EventArg, Stub>();
+  const event = new Event<EventArg>();
   const handler = jest.fn();
   const handler2 = jest.fn();
 
@@ -37,59 +31,56 @@ test('add listener once', () => {
 
   event.off(onceHandler);
 
-  event.emit(eventArg, stub);
-  event.emit(eventArg, stub);
+  event.emit(eventArg);
+  event.emit(eventArg);
 
   expect(handler).toBeCalledTimes(1);
-  expect(handler).toBeCalledWith(eventArg, stub);
+  expect(handler).toBeCalledWith(eventArg);
   expect(handler2).not.toHaveBeenCalled();
 });
 
 test('remove listeners', () => {
-  const stub = new Stub();
   const eventArg: EventArg = { foo: 'hello' };
-  const event = new Event<EventArg, Stub>();
+  const event = new Event<EventArg>();
   const handler = jest.fn();
   const handler2 = jest.fn();
 
   event.on(handler);
   event.on(handler2);
   expect(event.hasSubscriptions()).toBe(true);
-  event.emit(eventArg, stub);
+  event.emit(eventArg);
   event.off(handler);
   expect(event.hasSubscriptions()).toBe(true);
-  event.emit(eventArg, stub);
+  event.emit(eventArg);
 
   expect(handler).toBeCalledTimes(1);
-  expect(handler).toBeCalledWith(eventArg, stub);
+  expect(handler).toBeCalledWith(eventArg);
   expect(handler2).toBeCalledTimes(2);
-  expect(handler2).toBeCalledWith(eventArg, stub);
+  expect(handler2).toBeCalledWith(eventArg);
 });
 
 test('clear listeners', () => {
-  const stub = new Stub();
   const eventArg: EventArg = { foo: 'hello' };
-  const event = new Event<EventArg, Stub>();
+  const event = new Event<EventArg>();
   const handler = jest.fn();
   const handler2 = jest.fn();
 
   event.on(handler);
   event.on(handler2);
-  event.emit(eventArg, stub);
+  event.emit(eventArg);
   event.clear();
   expect(event.hasSubscriptions()).toBe(false);
-  event.emit(eventArg, stub);
+  event.emit(eventArg);
 
   expect(handler).toBeCalledTimes(1);
-  expect(handler).toBeCalledWith(eventArg, stub);
+  expect(handler).toBeCalledWith(eventArg);
   expect(handler2).toBeCalledTimes(1);
-  expect(handler2).toBeCalledWith(eventArg, stub);
+  expect(handler2).toBeCalledWith(eventArg);
 });
 
 test('modifying on emit', () => {
-  const stub = new Stub();
   const eventArg: EventArg = { foo: 'hello' };
-  const event = new Event<EventArg, Stub>();
+  const event = new Event<EventArg>();
   const handler = jest.fn(() => {
     event.off(handler);
   });
@@ -97,22 +88,21 @@ test('modifying on emit', () => {
 
   event.on(handler);
   event.on(handler2);
-  event.emit(eventArg, stub);
+  event.emit(eventArg);
   event.clear();
   expect(event.hasSubscriptions()).toBe(false);
-  event.emit(eventArg, stub);
+  event.emit(eventArg);
 
   expect(handler).toBeCalledTimes(1);
-  expect(handler).toBeCalledWith(eventArg, stub);
+  expect(handler).toBeCalledWith(eventArg);
   expect(handler2).toBeCalledTimes(1);
-  expect(handler2).toBeCalledWith(eventArg, stub);
+  expect(handler2).toBeCalledWith(eventArg);
 });
 
 describe('errors', () => {
   test('non-bail', () => {
-    const stub = new Stub();
     const eventArg: EventArg = { foo: 'hello' };
-    const event = new Event<EventArg, Stub>();
+    const event = new Event<EventArg>();
     const handler1 = jest.fn();
     const handler2 = jest.fn(() => {
       throw new Error('Foo');
@@ -123,7 +113,7 @@ describe('errors', () => {
     event.on(handler2);
     event.on(handler3);
 
-    const errors = event.emit(eventArg, stub);
+    const errors = event.emit(eventArg);
 
     expect(errors).toHaveLength(1);
     expect(errors[0]).toBeInstanceOf(Error);
@@ -133,9 +123,8 @@ describe('errors', () => {
   });
 
   test('bail', () => {
-    const stub = new Stub();
     const eventArg: EventArg = { foo: 'hello' };
-    const event = new Event<EventArg, Stub>({ bail: true });
+    const event = new Event<EventArg>({ bail: true });
     const handler1 = jest.fn();
     const handler2 = jest.fn(() => {
       throw new Error('Foo');
@@ -146,7 +135,7 @@ describe('errors', () => {
     event.on(handler2);
     event.on(handler3);
 
-    const errors = event.emit(eventArg, stub);
+    const errors = event.emit(eventArg);
 
     expect(errors).toHaveLength(1);
     expect(errors[0]).toBeInstanceOf(Error);
@@ -157,8 +146,8 @@ describe('errors', () => {
 });
 
 test('readonly mode', () => {
-  const source = new Event<number, void>();
-  const target = new Event<number, void>({ source });
+  const source = new Event<number>();
+  const target = new Event<number>({ source });
   const handler1 = jest.fn();
   const handler2 = jest.fn(() => {
     throw new Error('Foo');
@@ -181,7 +170,7 @@ test('readonly mode', () => {
 });
 
 test('filterable', () => {
-  const event = new Event<{ name: string }, null>();
+  const event = new Event<{ name: string }>();
   const aaaFilter = event.for((arg) => arg.name === 'aaa');
   const bbbFilter = event.for((arg) => arg.name === 'bbb');
   const fooFilter = event.for((arg) => arg.name === 'foo');
@@ -193,9 +182,9 @@ test('filterable', () => {
   bbbFilter.on(handler2);
   fooFilter.on(handler2);
 
-  event.emit({ name: 'ccc' }, null);
-  event.emit({ name: 'ddd' }, null);
-  event.emit({ name: 'foo' }, null);
+  event.emit({ name: 'ccc' });
+  event.emit({ name: 'ddd' });
+  event.emit({ name: 'foo' });
 
   expect(handler1.mock.calls).toMatchSnapshot();
   expect(handler2.mock.calls).toMatchSnapshot();

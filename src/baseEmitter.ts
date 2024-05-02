@@ -7,28 +7,28 @@ export interface Emitable<TArg, TReturn> {
 export type Filter<TArg> = (arg: TArg) => boolean;
 
 export interface Filterable<TArg, TReturn> {
-  for(filter: Filter<TArg>): BaseEvent<TArg, TReturn>;
+  for(filter: Filter<TArg>): BaseEmitter<TArg, TReturn>;
 }
 
-export type EventOptions<TArg, TEmitReturn> = {
-  source?: BaseEvent<TArg, TEmitReturn>;
+export type EmitterOptions<TArg, TEmitReturn> = {
+  source?: BaseEmitter<TArg, TEmitReturn>;
   bail?: boolean;
   filter?: Filter<TArg>;
 };
 
-export abstract class BaseEvent<TArg, TEmitReturn>
+export abstract class BaseEmitter<TArg, TEmitReturn>
   implements Emitable<TArg, TEmitReturn>, Filterable<TArg, TEmitReturn>
 {
   protected subscribers = new Set<Handler<TArg, unknown>>();
-  readonly sourceEvent?: BaseEvent<TArg, TEmitReturn>;
+  readonly sourceEmitter?: BaseEmitter<TArg, TEmitReturn>;
   readonly filter?: Filter<TArg>;
   readonly isReadOnly: boolean = false;
   readonly isBailMode: boolean = false;
 
-  protected constructor(options?: EventOptions<TArg, TEmitReturn>) {
+  protected constructor(options?: EmitterOptions<TArg, TEmitReturn>) {
     this.isBailMode = !!options?.bail;
     this.isReadOnly = !!options?.source;
-    this.sourceEvent = options?.source;
+    this.sourceEmitter = options?.source;
     this.filter = options?.filter;
   }
 
@@ -55,7 +55,7 @@ export abstract class BaseEvent<TArg, TEmitReturn>
   }
 
   abstract emit(arg: TArg): TEmitReturn;
-  abstract for(filter: Filter<TArg>): BaseEvent<TArg, TEmitReturn>;
+  abstract for(filter: Filter<TArg>): BaseEmitter<TArg, TEmitReturn>;
 
   clear(): void {
     this.subscribers.clear();

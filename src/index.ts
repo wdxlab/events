@@ -1,4 +1,4 @@
-export * from './baseEvent';
-export * from './event';
-export * from './asyncEvent';
+export * from './baseEmitter';
+export * from './emitter';
+export * from './asyncEmitter';
 export * from './aggregateError';

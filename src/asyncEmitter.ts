@@ -1,13 +1,13 @@
-import { BaseEvent, EventOptions, Filter, Handler } from './baseEvent';
+import { BaseEmitter, EmitterOptions, Filter, Handler } from './baseEmitter';
 import { AggregateError } from './aggregateError';
 
 export type AsyncHandler<TArg> = Handler<TArg, Promise<void>>;
 
-export class AsyncEvent<TArg> extends BaseEvent<TArg, Promise<unknown[]>> {
-  constructor(options?: EventOptions<TArg, Promise<unknown[]>>) {
+export class AsyncEmitter<TArg> extends BaseEmitter<TArg, Promise<unknown[]>> {
+  constructor(options?: EmitterOptions<TArg, Promise<unknown[]>>) {
     super(options);
 
-    this.sourceEvent?.on(async (arg) => {
+    this.sourceEmitter?.on(async (arg) => {
       const result = await this.emitInt(arg);
       if (result.length) {
         throw new AggregateError(result);
@@ -17,7 +17,7 @@ export class AsyncEvent<TArg> extends BaseEvent<TArg, Promise<unknown[]>> {
 
   async emit(arg: TArg): Promise<unknown[]> {
     if (this.isReadOnly) {
-      throw new Error('Event is readonly');
+      throw new Error('Emitter is readonly');
     }
 
     return this.emitInt(arg);
@@ -44,7 +44,7 @@ export class AsyncEvent<TArg> extends BaseEvent<TArg, Promise<unknown[]>> {
     return errors;
   }
 
-  for(filter: Filter<TArg>): AsyncEvent<TArg> {
-    return new AsyncEvent<TArg>({ bail: this.isBailMode, filter, source: this });
+  for(filter: Filter<TArg>): AsyncEmitter<TArg> {
+    return new AsyncEmitter<TArg>({ bail: this.isBailMode, filter, source: this });
   }
 }

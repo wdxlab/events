@@ -1,11 +1,11 @@
-import { BaseEvent, EventOptions, Filter } from './baseEvent';
+import { BaseEmitter, EmitterOptions, Filter } from './baseEmitter';
 import { AggregateError } from './aggregateError';
 
-export class Event<TArg> extends BaseEvent<TArg, unknown[]> {
-  constructor(options?: EventOptions<TArg, unknown[]>) {
+export class Emitter<TArg> extends BaseEmitter<TArg, unknown[]> {
+  constructor(options?: EmitterOptions<TArg, unknown[]>) {
     super(options);
 
-    this.sourceEvent?.on((arg) => {
+    this.sourceEmitter?.on((arg) => {
       const result = this.emitInt(arg);
       if (result.length) {
         throw new AggregateError(result);
@@ -15,7 +15,7 @@ export class Event<TArg> extends BaseEvent<TArg, unknown[]> {
 
   emit(arg: TArg): unknown[] {
     if (this.isReadOnly) {
-      throw new Error('Event is readonly');
+      throw new Error('Emitter is readonly');
     }
 
     return this.emitInt(arg);
@@ -42,7 +42,7 @@ export class Event<TArg> extends BaseEvent<TArg, unknown[]> {
     return errors;
   }
 
-  for(filter: Filter<TArg>): Event<TArg> {
-    return new Event<TArg>({ source: this, filter, bail: this.isBailMode });
+  for(filter: Filter<TArg>): Emitter<TArg> {
+    return new Emitter<TArg>({ source: this, filter, bail: this.isBailMode });
   }
 }

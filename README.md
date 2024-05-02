@@ -13,15 +13,15 @@ npm install @wdxlab/events --save
 ## Usage
 
 ```ts
-import Event from '@wdxlab/events';
+import {Emitter} from '@wdxlab/events';
 
-const event = new Event<string, { foo: string }>();
+const emitter = new Emitter<string, { foo: string }>();
 
-event.on((arg) => {
+emitter.on((arg) => {
   console.log(arg); // hello
 });
 
-event.emit('hello', { foo: string });
+emitter.emit('hello', { foo: string });
 ```
 
 ### Events API
@@ -50,7 +50,7 @@ Returns handler to remove handler manually
 
 #### `for(filter): Event`
 
-Creates an event that will only emit if an argument passes a filter
+Creates an event emitter that will only emit if an argument passes a filter
 
 > learn more on `Filtering` section
 
@@ -65,18 +65,18 @@ Remove all subscription from an Event
 ## Async Events
 
 ```ts
-import { AsyncEvent } from '@wdxlab/events';
+import { AsyncEmitter } from '@wdxlab/events';
 import { setTimeout } from 'node:timers/promises';
 
-const event = new AsyncEvent<number>();
+const emitter = new AsyncEmitter<number>();
 
-event.on(async ms => {
+emitter.on(async ms => {
     console.log('before timer'); // 1
     await setTimeout(ms);
     console.log('after timer'); // 2
 });
 
-await event.emit(123);
+await emitter.emit(123);
 console.log('after emit'); // 3
 ```
 
@@ -95,21 +95,21 @@ Return a promise that resolves with a list of subscribers errors
 Allows listeners to filter events by some condition
 
 ```ts
-import { Event, FilterableEvent } from '@wdxlab/events';
+import { Emitter } from '@wdxlab/events';
 
 type Arg = { name: string };
 
-const event = new Event<Arg>();
-const appleEvent = event.for(arg => arg.name === 'Apple')
-const orangeEvent = event.for(arg => arg.name === 'Orange')
+const emitter = new Emitter<Arg>();
+const appleEvent = emitter.for(arg => arg.name === 'Apple')
+const orangeEvent = emitter.for(arg => arg.name === 'Orange')
 
-event.on(arg => console.log('Global handler:', arg.name));
+emitter.on(arg => console.log('Global handler:', arg.name));
 appleEvent.on(() => console.log('Apple handler'));
 orangeEvent.on(() => console.log('Orangle handler'));
 
-event.emit({ name: 'Apple' });
-event.emit({ name: 'Banana' });
-event.emit({ name: 'Orange' });
+emitter.emit({ name: 'Apple' });
+emitter.emit({ name: 'Banana' });
+emitter.emit({ name: 'Orange' });
 ```
 
 The output is:
@@ -132,33 +132,33 @@ Sync and Async events has some useful options
 Allows to create readonly-events (can listen, but can't emit)
 
 ```ts
-import Event from '@wdxlab/events';
+import { Emitter } from '@wdxlab/events';
 
-const event = new Event<string>();
-const readonly = new Event<string>({ source: event });
+const emitter = new Emitter<string>();
+const readonly = new Emitter<string>({ source: emitter });
 
 readonly.on((arg) => {
   console.log(arg); // hello
 });
 
-event.emit('hello'); // ✅
+emitter.emit('hello'); // ✅
 readonly.emit('hello'); // ❌ Error: Event is readonly
 ```
 
 ### options.bail
 
-Controls how an event will react on error in some listener (`false` by default)
+Controls how an emitter will react on error in some listener (`false` by default)
 
 ```ts
-const event = new Event<string>();
+const emitter = new Emitter<string>();
 
-event.on((arg) => console.log('1', arg));
-event.on(() => {
+emitter.on((arg) => console.log('1', arg));
+emitter.on(() => {
     throw new Error('Some error');
 });
-event.on((arg) => console.log('3', arg));
+emitter.on((arg) => console.log('3', arg));
 
-const errors = event.emit('hello');
+const errors = emitter.emit('hello');
 
 if (errors.length) {
     console.log('Something went wrong in some lestener')
@@ -174,18 +174,18 @@ Something went wrong in some lestener
 
 In other words: if any handler throws an error, other handlers WILL NOT be affected
 
-When `true`, an event will stop calling any listeners if any of them throw an error.
+When `true`, an emitter will stop calling any listeners if any of them throw an error.
 
 ```ts
-const event = new Event<string>({ bail: true });
+const emitter = new Emitter<string>({ bail: true });
 
-event.on((arg) => console.log('1', arg));
-event.on(() => {
+emitter.on((arg) => console.log('1', arg));
+emitter.on(() => {
     throw new Error('Some error');
 });
-event.on((arg) => console.log('3', arg));
+emitter.on((arg) => console.log('3', arg));
 
-const errors = event.emit('hello');
+const errors = emitter.emit('hello');
 
 if (errors.length) {
     console.log('Something went wrong in some lestener')

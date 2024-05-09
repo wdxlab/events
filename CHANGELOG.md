@@ -4,9 +4,10 @@ Total refactoring
 
 ### Breaking
 
+- rename `Event` into `Emitter` and `AsyncEvent` into `AsyncEmitter`
 - remove `ReadonlyEvent`
 - remove sender
-- no throw exception on emit
+- no throw exception on emit, return errors list instead
 
 ### Features
 

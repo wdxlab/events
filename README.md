@@ -15,13 +15,13 @@ npm install @wdxlab/events --save
 ```ts
 import {Emitter} from '@wdxlab/events';
 
-const emitter = new Emitter<string, { foo: string }>();
+const emitter = new Emitter<string>();
 
 emitter.on((arg) => {
   console.log(arg); // hello
 });
 
-emitter.emit('hello', { foo: string });
+emitter.emit('hello');
 ```
 
 ### Events API
@@ -145,6 +145,29 @@ emitter.emit('hello'); // ✅
 readonly.emit('hello'); // ❌ Error: Event is readonly
 ```
 
+#### Readonly-event error handling
+
+```ts
+import { Emitter } from '@wdxlab/events';
+
+const emitter = new Emitter<string>();
+const readonly = new Emitter<string>({ source: emitter });
+
+// ...
+
+const error = emitter.emit('hello');
+
+if (errors.length) {
+    console.log('Something went wrong in some lestener');
+
+    for (const aggregatedError of errors) {
+        for (const error of aggregatedError.errors) {
+            console.error(error);
+        }
+    }
+}
+```
+
 ### options.bail
 
 Controls how an emitter will react on error in some listener (`false` by default)
@@ -161,7 +184,7 @@ emitter.on((arg) => console.log('3', arg));
 const errors = emitter.emit('hello');
 
 if (errors.length) {
-    console.log('Something went wrong in some lestener')
+    console.log('Something went wrong in some lestener');
 }
 ```
 
@@ -188,7 +211,7 @@ emitter.on((arg) => console.log('3', arg));
 const errors = emitter.emit('hello');
 
 if (errors.length) {
-    console.log('Something went wrong in some lestener')
+    console.log('Something went wrong in some lestener');
 }
 ```
 

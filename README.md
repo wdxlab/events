@@ -48,11 +48,17 @@ Add event listener that will be automatically removed after first call
 
 Returns handler to remove handler manually
 
-#### `for(filter): Event`
+#### `filter(filterFn): Event`
 
 Creates an event emitter that will only emit if an argument passes a filter
 
 > learn more on `Filtering` section
+
+#### `map(mapFn): Event`
+
+Creates an event emitter that will transform an argument with `mapFn` before emit
+
+> learn more on `Mapping` section
 
 #### `hasSubscriptions(): boolean`
 
@@ -100,8 +106,8 @@ import { Emitter } from '@wdxlab/events';
 type Arg = { name: string };
 
 const emitter = new Emitter<Arg>();
-const appleEvent = emitter.for(arg => arg.name === 'Apple')
-const orangeEvent = emitter.for(arg => arg.name === 'Orange')
+const appleEvent = emitter.filter(arg => arg.name === 'Apple')
+const orangeEvent = emitter.filter(arg => arg.name === 'Orange')
 
 emitter.on(arg => console.log('Global handler:', arg.name));
 appleEvent.on(() => console.log('Apple handler'));
@@ -123,9 +129,41 @@ Orange handler
 
 > This also works for async events
 
-## Other Options
+## Mapping with options.map
+
+Allows to transform an argument with some function before emit
+
+```ts
+type Arg = { fruit: { name: string } };
+
+const emitter = new Emitter<Arg>();
+
+emitter
+    .map((arg) => arg.name)
+    .on((arg) => console.log(arg));
+
+emitter.emit({ name: 'Apple' });
+emitter.emit({ name: 'Banana' });
+emitter.emit({ name: 'Orange' });
+```
+
+The output is:
+```
+Apple
+Banana
+Orange
+```
+
+> This also works for async events
+
+## Options
 
 Sync and Async events has some useful options
+
+- `source?: Emitter`
+- `bail?: boolean`
+- `filter?: FilterFn`
+- `map?: MapFn`
 
 ### options.source
 

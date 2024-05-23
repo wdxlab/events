@@ -11,15 +11,17 @@ Total refactoring
 
 ### Features
 
-- Event `for(filter)`-method
+- Event `filter(fn)`-method
+- Event `map(fn)`-method
 - Event options:
-  - source - source for an event (readonly event alternative)
-  - bail - event reaction on any listener error
-  - filter - event only emit if an argument passes a filter
+  - `source` - source for an event (readonly event alternative)
+  - `bail` - event reaction on any listener error
+  - `filter` - event only emit if an argument passes a filter
+  - `map` - transform an argument before emit
 
 > see [README.md](README.md) for examples
 
-## 1.1.0 (24 Jule 2020)
+## 1.1.0 (24 July 2020)
 
 ### Feature
 

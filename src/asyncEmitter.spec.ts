@@ -93,9 +93,9 @@ test('readonly mode', async () => {
 
 it('filterable', async () => {
   const emitter = new AsyncEmitter<{ name: string }>();
-  const aaaFilter = emitter.for((arg) => arg.name === 'aaa');
-  const bbbFilter = emitter.for((arg) => arg.name === 'bbb');
-  const fooFilter = emitter.for((arg) => arg.name === 'foo');
+  const aaaFilter = emitter.filter((arg) => arg.name === 'aaa');
+  const bbbFilter = emitter.filter((arg) => arg.name === 'bbb');
+  const fooFilter = emitter.filter((arg) => arg.name === 'foo');
   const handler1 = jest.fn();
   const handler2 = jest.fn();
 
@@ -113,4 +113,23 @@ it('filterable', async () => {
   await emitter.emit({ name: 'foo' });
   expect(handler1.mock.calls).toMatchSnapshot();
   expect(handler2.mock.calls).toMatchSnapshot();
+});
+
+test('map', async () => {
+  type IArg = { event: { name: string }; source: { id: number } };
+  const emitter = new AsyncEmitter<IArg>();
+  const handler1 = jest.fn();
+
+  emitter
+    .filter((arg) => arg.source.id === 123)
+    .map((arg) => arg.event)
+    .filter((arg) => arg.name === 'foo')
+    .map((arg) => arg.name)
+    .on(handler1);
+
+  await emitter.emit({ source: { id: 123 }, event: { name: 'bar' } });
+  await emitter.emit({ source: { id: 456 }, event: { name: 'foo' } });
+  await emitter.emit({ source: { id: 123 }, event: { name: 'foo' } });
+
+  expect(handler1.mock.calls).toMatchSnapshot();
 });

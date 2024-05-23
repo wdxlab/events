@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`filterable 1`] = `
+exports[`filter 1`] = `
 [
   [
     {
@@ -20,12 +20,20 @@ exports[`filterable 1`] = `
 ]
 `;
 
-exports[`filterable 2`] = `
+exports[`filter 2`] = `
 [
   [
     {
       "name": "foo",
     },
+  ],
+]
+`;
+
+exports[`map 1`] = `
+[
+  [
+    "foo",
   ],
 ]
 `;

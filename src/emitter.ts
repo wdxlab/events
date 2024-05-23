@@ -1,8 +1,12 @@
-import { BaseEmitter, EmitterOptions, Filter } from './baseEmitter';
+import { BaseEmitter, EmitterOptions, FilterFn, MapFn } from './baseEmitter';
 import { AggregateError } from './aggregateError';
 
-export class Emitter<TArg> extends BaseEmitter<TArg, unknown[]> {
-  constructor(options?: EmitterOptions<TArg, unknown[]>) {
+export class Emitter<TInputArg, TOutputArg = TInputArg> extends BaseEmitter<
+  TInputArg,
+  TOutputArg,
+  unknown[]
+> {
+  constructor(options?: EmitterOptions<TInputArg, TOutputArg, unknown[]>) {
     super(options);
 
     this.sourceEmitter?.on((arg) => {
@@ -13,7 +17,7 @@ export class Emitter<TArg> extends BaseEmitter<TArg, unknown[]> {
     });
   }
 
-  emit(arg: TArg): unknown[] {
+  emit(arg: TInputArg): unknown[] {
     if (this.isReadOnly) {
       throw new Error('Emitter is readonly');
     }
@@ -21,8 +25,8 @@ export class Emitter<TArg> extends BaseEmitter<TArg, unknown[]> {
     return this.emitInt(arg);
   }
 
-  protected emitInt(arg: TArg): unknown[] {
-    if (this.filter && !this.filter(arg)) {
+  protected emitInt(arg: TInputArg): unknown[] {
+    if (this.filterFn && !this.filterFn(arg)) {
       return [];
     }
 
@@ -30,7 +34,12 @@ export class Emitter<TArg> extends BaseEmitter<TArg, unknown[]> {
 
     for (const fn of this.subscribers) {
       try {
-        fn(arg);
+        if (this.mapFn) {
+          fn(this.mapFn(arg));
+        } else {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          fn(arg as any);
+        }
       } catch (e) {
         errors.push(e);
         if (this.isBailMode) {
@@ -42,7 +51,19 @@ export class Emitter<TArg> extends BaseEmitter<TArg, unknown[]> {
     return errors;
   }
 
-  for(filter: Filter<TArg>): Emitter<TArg> {
-    return new Emitter<TArg>({ source: this, filter, bail: this.isBailMode });
+  filter(filter: FilterFn<TOutputArg>): Emitter<TOutputArg, TOutputArg> {
+    return new Emitter<TOutputArg, TOutputArg>({
+      source: this,
+      filter,
+      bail: this.isBailMode,
+    });
+  }
+
+  map<TNewArg>(mapFn: MapFn<TOutputArg, TNewArg>): Emitter<TOutputArg, TNewArg> {
+    return new Emitter<TOutputArg, TNewArg>({
+      source: this,
+      map: mapFn,
+      bail: this.isBailMode,
+    });
   }
 }

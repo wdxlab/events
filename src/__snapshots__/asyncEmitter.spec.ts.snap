@@ -59,6 +59,14 @@ exports[`filterable 6`] = `
 ]
 `;
 
+exports[`map 1`] = `
+[
+  [
+    "foo",
+  ],
+]
+`;
+
 exports[`should work 1`] = `
 [
   [

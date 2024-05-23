@@ -169,11 +169,11 @@ test('readonly mode', () => {
   expect(handler3).toBeCalledTimes(1);
 });
 
-test('filterable', () => {
+test('filter', () => {
   const emitter = new Emitter<{ name: string }>();
-  const aaaFilter = emitter.for((arg) => arg.name === 'aaa');
-  const bbbFilter = emitter.for((arg) => arg.name === 'bbb');
-  const fooFilter = emitter.for((arg) => arg.name === 'foo');
+  const aaaFilter = emitter.filter((arg) => arg.name === 'aaa');
+  const bbbFilter = emitter.filter((arg) => arg.name === 'bbb');
+  const fooFilter = emitter.filter((arg) => arg.name === 'foo');
   const handler1 = jest.fn();
   const handler2 = jest.fn();
 
@@ -188,4 +188,23 @@ test('filterable', () => {
 
   expect(handler1.mock.calls).toMatchSnapshot();
   expect(handler2.mock.calls).toMatchSnapshot();
+});
+
+test('map', () => {
+  type IArg = { event: { name: string }; source: { id: number } };
+  const emitter = new Emitter<IArg>();
+  const handler1 = jest.fn();
+
+  emitter
+    .filter((arg) => arg.source.id === 123)
+    .map((arg) => arg.event)
+    .filter((arg) => arg.name === 'foo')
+    .map((arg) => arg.name)
+    .on(handler1);
+
+  emitter.emit({ source: { id: 123 }, event: { name: 'bar' } });
+  emitter.emit({ source: { id: 456 }, event: { name: 'foo' } });
+  emitter.emit({ source: { id: 123 }, event: { name: 'foo' } });
+
+  expect(handler1.mock.calls).toMatchSnapshot();
 });

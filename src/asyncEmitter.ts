@@ -1,10 +1,14 @@
-import { BaseEmitter, EmitterOptions, Filter, Handler } from './baseEmitter';
+import { BaseEmitter, EmitterOptions, FilterFn, Handler, MapFn } from './baseEmitter';
 import { AggregateError } from './aggregateError';
 
 export type AsyncHandler<TArg> = Handler<TArg, Promise<void>>;
 
-export class AsyncEmitter<TArg> extends BaseEmitter<TArg, Promise<unknown[]>> {
-  constructor(options?: EmitterOptions<TArg, Promise<unknown[]>>) {
+export class AsyncEmitter<TInputArg, TOutputArg = TInputArg> extends BaseEmitter<
+  TInputArg,
+  TOutputArg,
+  Promise<unknown[]>
+> {
+  constructor(options?: EmitterOptions<TInputArg, TOutputArg, Promise<unknown[]>>) {
     super(options);
 
     this.sourceEmitter?.on(async (arg) => {
@@ -15,7 +19,7 @@ export class AsyncEmitter<TArg> extends BaseEmitter<TArg, Promise<unknown[]>> {
     });
   }
 
-  async emit(arg: TArg): Promise<unknown[]> {
+  async emit(arg: TInputArg): Promise<unknown[]> {
     if (this.isReadOnly) {
       throw new Error('Emitter is readonly');
     }
@@ -23,8 +27,8 @@ export class AsyncEmitter<TArg> extends BaseEmitter<TArg, Promise<unknown[]>> {
     return this.emitInt(arg);
   }
 
-  protected async emitInt(arg: TArg): Promise<unknown[]> {
-    if (this.filter && !this.filter(arg)) {
+  protected async emitInt(arg: TInputArg): Promise<unknown[]> {
+    if (this.filterFn && !this.filterFn(arg)) {
       return [];
     }
 
@@ -32,7 +36,12 @@ export class AsyncEmitter<TArg> extends BaseEmitter<TArg, Promise<unknown[]>> {
 
     for (const fn of this.subscribers) {
       try {
-        await fn(arg);
+        if (this.mapFn) {
+          await fn(this.mapFn(arg));
+        } else {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          await fn(arg as any);
+        }
       } catch (e) {
         errors.push(e);
         if (this.isBailMode) {
@@ -44,7 +53,19 @@ export class AsyncEmitter<TArg> extends BaseEmitter<TArg, Promise<unknown[]>> {
     return errors;
   }
 
-  for(filter: Filter<TArg>): AsyncEmitter<TArg> {
-    return new AsyncEmitter<TArg>({ bail: this.isBailMode, filter, source: this });
+  filter(filter: FilterFn<TOutputArg>): AsyncEmitter<TOutputArg, TOutputArg> {
+    return new AsyncEmitter<TOutputArg, TOutputArg>({
+      source: this,
+      filter,
+      bail: this.isBailMode,
+    });
+  }
+
+  map<TNewArg>(mapFn: MapFn<TOutputArg, TNewArg>): AsyncEmitter<TOutputArg, TNewArg> {
+    return new AsyncEmitter<TOutputArg, TNewArg>({
+      source: this,
+      map: mapFn,
+      bail: this.isBailMode,
+    });
   }
 }

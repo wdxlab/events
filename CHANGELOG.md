@@ -1,4 +1,4 @@
-## next
+## 2.0.0 (10 July 2024)
 
 Total refactoring
 

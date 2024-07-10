@@ -1,6 +1,6 @@
 {
   "name": "@wdxlab/events",
-  "version": "2.0.0-beta.4",
+  "version": "2.0.0",
   "description": "Rightly typed event emitter",
   "main": "dist/cjs",
   "module": "dist/esm",
@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "build": "npm run build:es6 && npm run build:cjs && npm run build:types",
-    "build:es6": "swc ./src -C module.type=es6 -d dist/es6 --strip-leading-paths",
+    "build:es6": "swc ./src -C module.type=es6 -d dist/esm --strip-leading-paths",
     "build:cjs": "swc ./src -C module.type=commonjs -d dist/cjs --strip-leading-paths",
     "build:types": "tsc",
     "fix": "npm run lint -- --fix",

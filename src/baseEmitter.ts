@@ -16,7 +16,6 @@ export interface Mappable<TArg, TReturn> {
 }
 
 export type EmitterOptions<TInputArg, TOutputArg, TEmitReturn> = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   source?: BaseEmitter<any, TInputArg, TEmitReturn>;
   bail?: boolean;
   filter?: FilterFn<TInputArg>;

@@ -1,6 +1,7 @@
 .idea/
 .vscode/
 node_modules/
+dist
 *.log
 *.lock
 .DS_store

@@ -1,3 +1,7 @@
+## 3.0.0 (02 April 2025)
+
+This package is ESM now
+
 ## 2.0.0 (10 July 2024)
 
 Total refactoring

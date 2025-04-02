@@ -1,5 +1,6 @@
-import { BaseEmitter, EmitterOptions, FilterFn, MapFn } from './baseEmitter';
-import { AggregateError } from './aggregateError';
+import type { EmitterOptions, FilterFn, MapFn } from './baseEmitter.js';
+import { BaseEmitter } from './baseEmitter.js';
+import { AggregateError } from './aggregateError.js';
 
 export class Emitter<TInputArg, TOutputArg = TInputArg> extends BaseEmitter<
   TInputArg,
@@ -37,7 +38,6 @@ export class Emitter<TInputArg, TOutputArg = TInputArg> extends BaseEmitter<
         if (this.mapFn) {
           fn(this.mapFn(arg));
         } else {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           fn(arg as any);
         }
       } catch (e) {

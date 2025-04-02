@@ -1,9 +1,10 @@
-import { AsyncEmitter } from './asyncEmitter';
+import { it, vi, expect, describe, test } from 'vitest';
+import { AsyncEmitter } from './asyncEmitter.js';
 
 it('should work', async () => {
   const emitter = new AsyncEmitter<{ name: string }>();
-  const handler = jest.fn(() => new Promise((r) => setTimeout(r, 500)));
-  const handler2 = jest.fn(() => new Promise((r) => setTimeout(r, 200)));
+  const handler = vi.fn(() => new Promise((r) => setTimeout(r, 500)));
+  const handler2 = vi.fn(() => new Promise((r) => setTimeout(r, 200)));
 
   emitter.on(handler);
   emitter.on(handler2);
@@ -25,11 +26,11 @@ describe('error', () => {
   test('non-bail', async () => {
     const emitterArg = { foo: 'hello' };
     const emitter = new AsyncEmitter<{ foo: string }>();
-    const handler1 = jest.fn();
-    const handler2 = jest.fn(() => {
+    const handler1 = vi.fn();
+    const handler2 = vi.fn(() => {
       throw new Error('Foo');
     });
-    const handler3 = jest.fn();
+    const handler3 = vi.fn();
 
     emitter.on(handler1);
     emitter.on(handler2);
@@ -47,11 +48,11 @@ describe('error', () => {
   test('bail', async () => {
     const emitterArg = { foo: 'hello' };
     const emitter = new AsyncEmitter<{ foo: string }>({ bail: true });
-    const handler1 = jest.fn();
-    const handler2 = jest.fn(() => {
+    const handler1 = vi.fn();
+    const handler2 = vi.fn(() => {
       throw new Error('Foo');
     });
-    const handler3 = jest.fn();
+    const handler3 = vi.fn();
 
     emitter.on(handler1);
     emitter.on(handler2);
@@ -70,11 +71,11 @@ describe('error', () => {
 test('readonly mode', async () => {
   const source = new AsyncEmitter<number>();
   const target = new AsyncEmitter<number>({ source });
-  const handler1 = jest.fn();
-  const handler2 = jest.fn(() => {
+  const handler1 = vi.fn();
+  const handler2 = vi.fn(() => {
     throw new Error('Foo');
   });
-  const handler3 = jest.fn();
+  const handler3 = vi.fn();
 
   target.on(handler1);
   target.on(handler2);
@@ -96,8 +97,8 @@ it('filterable', async () => {
   const aaaFilter = emitter.filter((arg) => arg.name === 'aaa');
   const bbbFilter = emitter.filter((arg) => arg.name === 'bbb');
   const fooFilter = emitter.filter((arg) => arg.name === 'foo');
-  const handler1 = jest.fn();
-  const handler2 = jest.fn();
+  const handler1 = vi.fn();
+  const handler2 = vi.fn();
 
   emitter.on(handler1);
   aaaFilter.on(handler2);
@@ -118,7 +119,7 @@ it('filterable', async () => {
 test('map', async () => {
   type IArg = { event: { name: string }; source: { id: number } };
   const emitter = new AsyncEmitter<IArg>();
-  const handler1 = jest.fn();
+  const handler1 = vi.fn();
 
   emitter
     .filter((arg) => arg.source.id === 123)

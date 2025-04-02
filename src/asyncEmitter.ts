@@ -1,5 +1,6 @@
-import { BaseEmitter, EmitterOptions, FilterFn, Handler, MapFn } from './baseEmitter';
-import { AggregateError } from './aggregateError';
+import type { EmitterOptions, FilterFn, Handler, MapFn } from './baseEmitter.js';
+import { BaseEmitter } from './baseEmitter.js';
+import { AggregateError } from './aggregateError.js';
 
 export type AsyncHandler<TArg> = Handler<TArg, Promise<void>>;
 
@@ -39,7 +40,6 @@ export class AsyncEmitter<TInputArg, TOutputArg = TInputArg> extends BaseEmitter
         if (this.mapFn) {
           await fn(this.mapFn(arg));
         } else {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           await fn(arg as any);
         }
       } catch (e) {

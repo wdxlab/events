@@ -1,20 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "ES2020",
-    "moduleResolution": "node",
+    "outDir": "./dist",
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "lib": [
-      "ES2020",
+      "ES2023",
       "dom"
     ],
-    "sourceMap": true,
+    "sourceMap": false,
     "esModuleInterop": true,
     "strict": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
-    "declaration": true,
-    "declarationDir": "./dist/types",
-    "emitDeclarationOnly": true
+    "declaration": true
   },
   "include": ["./src"],
   "exclude": [

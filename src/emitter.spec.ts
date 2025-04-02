@@ -1,12 +1,13 @@
-import { Emitter } from './emitter';
+import { vi, expect, describe, test } from 'vitest';
+import { Emitter } from './emitter.js';
 
 type EventArg = { foo: string };
 
 test('add the listeners and emit', () => {
   const emitterArg: EventArg = { foo: 'hello' };
   const emitter = new Emitter<EventArg>();
-  const handler = jest.fn();
-  const handler2 = jest.fn();
+  const handler = vi.fn();
+  const handler2 = vi.fn();
 
   emitter.on(handler);
   emitter.on(handler);
@@ -23,8 +24,8 @@ test('add the listeners and emit', () => {
 test('add listener once', () => {
   const emitterArg: EventArg = { foo: 'hello' };
   const emitter = new Emitter<EventArg>();
-  const handler = jest.fn();
-  const handler2 = jest.fn();
+  const handler = vi.fn();
+  const handler2 = vi.fn();
 
   emitter.once(handler);
   const onceHandler = emitter.once(handler2);
@@ -42,8 +43,8 @@ test('add listener once', () => {
 test('remove listeners', () => {
   const emitterArg: EventArg = { foo: 'hello' };
   const emitter = new Emitter<EventArg>();
-  const handler = jest.fn();
-  const handler2 = jest.fn();
+  const handler = vi.fn();
+  const handler2 = vi.fn();
 
   emitter.on(handler);
   emitter.on(handler2);
@@ -62,8 +63,8 @@ test('remove listeners', () => {
 test('clear listeners', () => {
   const emitterArg: EventArg = { foo: 'hello' };
   const emitter = new Emitter<EventArg>();
-  const handler = jest.fn();
-  const handler2 = jest.fn();
+  const handler = vi.fn();
+  const handler2 = vi.fn();
 
   emitter.on(handler);
   emitter.on(handler2);
@@ -81,10 +82,10 @@ test('clear listeners', () => {
 test('modifying on emit', () => {
   const emitterArg: EventArg = { foo: 'hello' };
   const emitter = new Emitter<EventArg>();
-  const handler = jest.fn(() => {
+  const handler = vi.fn(() => {
     emitter.off(handler);
   });
-  const handler2 = jest.fn();
+  const handler2 = vi.fn();
 
   emitter.on(handler);
   emitter.on(handler2);
@@ -103,11 +104,11 @@ describe('errors', () => {
   test('non-bail', () => {
     const emitterArg: EventArg = { foo: 'hello' };
     const emitter = new Emitter<EventArg>();
-    const handler1 = jest.fn();
-    const handler2 = jest.fn(() => {
+    const handler1 = vi.fn();
+    const handler2 = vi.fn(() => {
       throw new Error('Foo');
     });
-    const handler3 = jest.fn();
+    const handler3 = vi.fn();
 
     emitter.on(handler1);
     emitter.on(handler2);
@@ -125,11 +126,11 @@ describe('errors', () => {
   test('bail', () => {
     const emitterArg: EventArg = { foo: 'hello' };
     const emitter = new Emitter<EventArg>({ bail: true });
-    const handler1 = jest.fn();
-    const handler2 = jest.fn(() => {
+    const handler1 = vi.fn();
+    const handler2 = vi.fn(() => {
       throw new Error('Foo');
     });
-    const handler3 = jest.fn();
+    const handler3 = vi.fn();
 
     emitter.on(handler1);
     emitter.on(handler2);
@@ -148,11 +149,11 @@ describe('errors', () => {
 test('readonly mode', () => {
   const source = new Emitter<number>();
   const target = new Emitter<number>({ source });
-  const handler1 = jest.fn();
-  const handler2 = jest.fn(() => {
+  const handler1 = vi.fn();
+  const handler2 = vi.fn(() => {
     throw new Error('Foo');
   });
-  const handler3 = jest.fn();
+  const handler3 = vi.fn();
 
   target.on(handler1);
   target.on(handler2);
@@ -174,8 +175,8 @@ test('filter', () => {
   const aaaFilter = emitter.filter((arg) => arg.name === 'aaa');
   const bbbFilter = emitter.filter((arg) => arg.name === 'bbb');
   const fooFilter = emitter.filter((arg) => arg.name === 'foo');
-  const handler1 = jest.fn();
-  const handler2 = jest.fn();
+  const handler1 = vi.fn();
+  const handler2 = vi.fn();
 
   emitter.on(handler1);
   aaaFilter.on(handler2);
@@ -193,7 +194,7 @@ test('filter', () => {
 test('map', () => {
   type IArg = { event: { name: string }; source: { id: number } };
   const emitter = new Emitter<IArg>();
-  const handler1 = jest.fn();
+  const handler1 = vi.fn();
 
   emitter
     .filter((arg) => arg.source.id === 123)
